@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { isAuth, isOwner, notOwner } = require('../middlewares/guards');
 const preload = require('../middlewares/preload');
-const { addHotelToList } = require('../services/user');
+const { addHotelToList, addBookedHotel } = require('../services/user');
 const { parseMongooseError } = require('../util/parse');
 
 router.post('/', isAuth(), async(req, res) => {
@@ -107,6 +107,7 @@ router.post('/:id/book', isAuth(), preload, notOwner(), async(req, res) => {
     try {
         const hotel = req.data;
         const updatedHotel = await req.storage.bookRoom(hotel, req.user._id);
+        await addBookedHotel(req.user._id, updatedHotel._id);
         res.json(updatedHotel);
     } catch (err) {
         let message = err.message;

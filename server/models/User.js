@@ -13,7 +13,8 @@ const schema = new Schema({
         type: String,
         required: true
     },
-    hotelsCreated: [{ type: Schema.Types.ObjectId, ref: 'Hotel' }]
+    hotelsCreated: [{ type: Schema.Types.ObjectId, ref: 'Hotel' }],
+    hotelsBooked: [{ type: Schema.Types.ObjectId, ref: 'Hotel'}]
 });
 
 module.exports = model('User', schema);

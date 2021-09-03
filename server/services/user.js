@@ -7,7 +7,7 @@ async function createUser(username, email, hashedPassword){
         throw new Error('There is already an user with that email!');
     }
 
-    const user = new User({ username, email, hashedPassword, hotelsCreated: [] });
+    const user = new User({ username, email, hashedPassword, hotelsCreated: [], hotelsBooked: [] });
     await user.save();
     return user;
 }
@@ -26,9 +26,19 @@ async function addHotelToList(userId, hotelId){
     }
 }
 
+async function addBookedHotel(userId, hotelId){
+    try {
+        const user = await User.findById(userId);
+        user.hotelsBooked.push(hotelId);
+        return user.save();
+    } catch (err) {
+        throw new Error('Database Error');
+    }
+}
+
 async function getProfile(userId) {
     try {
-        const user = await User.findById(userId).populate('hotelsBooked');
+        const user = await User.findById(userId);
         return user;
     } catch (err) {
         throw new Error('Database Error');
@@ -50,6 +60,7 @@ module.exports = {
     createUser,
     getUserByEmail,
     addHotelToList,
+    addBookedHotel,
     getProfile,
     editProfile
 };
