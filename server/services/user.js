@@ -38,7 +38,7 @@ async function addBookedHotel(userId, hotelId){
 
 async function getProfile(userId) {
     try {
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).populate('hotelsBooked');
         return user;
     } catch (err) {
         throw new Error('Database Error');

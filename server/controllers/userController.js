@@ -1,5 +1,5 @@
 const { isAuth, isGuest } = require('../middlewares/guards');
-const { editProfile } = require('../services/user');
+const { editProfile, getProfile } = require('../services/user');
 const { createToken } = require('../middlewares/auth');
 
 const router = require('express').Router();
@@ -27,6 +27,16 @@ router.post('/login', isGuest(), async(req, res) => {
 router.get('/logout', (req, res) => {
     res.json({});
 });
+
+router.get('/booked', isAuth(), async (req, res) => {
+    try {
+        const userData = await getProfile(req.user._id);
+        res.json(userData.hotelsBooked);
+    } catch (err) {
+        console.log(err.message);
+        res.status(err.status || 400).json({ message: err.message });
+    }
+})
 
 router.post('/editProfile', isAuth(), async (req, res) => {
     try { 
